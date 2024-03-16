@@ -1,0 +1,41 @@
+{
+  "name": "card-creator",
+  "version": "0.1.0",
+  "description": "For creating cards in the browser",
+  "bin": {
+    "fcp": "bin/fcp.js"
+  },
+  "scripts": {
+    "postinstall": "node ./bin/fcp.js sass/card-example.scss sass/card.scss --no-overwrite && node ./bin/fcp.js card-example.html card.html --no-overwrite && webpack --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --config webpack.config.js --watch",
+    "dev": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js"
+  },
+  "keywords": [
+    "board game",
+    "card game",
+    "print"
+  ],
+  "author": {
+    "name": "Harry Mustoe-Playfair",
+    "email": "harry.mustoeplayfair@gmail.com",
+    "url": "mustoeplayfair.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.4.18",
+    "css-loader": "^6.10.0",
+    "mini-css-extract-plugin": "^2.8.1",
+    "ncp-plus": "^2.0.4",
+    "postcss-cli": "^11.0.0",
+    "sass": "^1.71.1",
+    "sass-loader": "^14.1.1",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "markdown-it": "^14.0.0"
+  }
+}

@@ -1,0 +1,417 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Card Creator</title>
+        <link rel="stylesheet" href="/dist/css/app.css">
+        <meta name="description" content="">
+
+        <meta property="og:title" content="">
+        <meta property="og:type" content="">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="">
+        <meta property="og:image:alt" content="">
+
+        <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" href="/icon.svg" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="icon.png">
+
+        <meta name="theme-color" content="#fafafa">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark-reasonable.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+        <script src="/dist/js/app.js"></script>
+        <script>hljs.highlightAll();</script>
+    </head>
+
+    <body class="documentation">
+        <nav class="main">
+            <a href="/index.html">Card Creator</a>
+        </nav>
+        <main>
+            <header>
+                <h1 id="main-title">Card Creator Documentation</h1>
+                <p class="tagline">by Harry Mustoe-Playfair</p>
+            </header>
+            <section>
+                <p>HTML + CSS based card creation.</p>
+                <h2 class="no-toc">Contents</h2>
+                <div class="table-of-contents" id="auto-toc"></div>
+            </section>
+            <section>
+                <h2 id="intro">Introduction</h2>
+                <p>There are <em>many</em> solutions out there for card creation software.</p>
+                <p>However, there are none that provide the ultimate flexibility of a HTML and CSS based layouting engine.</p>
+                <p>By combining the power of HTML and CSS with browser based printing, we can generate highly complex data driven layouts very easily.</p>
+            </section>
+            <section>
+                <h2 id="installation">Installation</h2>
+                <p>Please see the README for installation instructions. If you're reading this, you're probably doing alright so far!</p>
+                <p>Basically download the repo, and <code>npm install</code>.</p>
+                <p>Then, run <code>npm watch</code> and point your browser to the root directory.</p>
+            </section>
+            <section>
+                <h2 id="overview">Overview</h2>
+                <p>To use the card creator you will do 3 things:</p>
+                <ul>
+                    <li>Define the cards in a csv file</li>
+                    <li>Layout the cards in a html file (<code>card.html</code>)</li>
+                    <li>Style the card using css (in <code>sass/card.scss</code>)</li>
+                </ul>
+                <p>We will go through each part step by step.</p>
+            </section>
+            <section>
+                <h2 id="data-prep">Data Preparation</h2>
+                <p>The first thing to do is create your source data.</p>
+                <p>The <strong>only supported option</strong> at the moment is a CSV input. Your CSV file <strong>must</strong> have headers.</p>
+                <p>It's a good idea to have the following headers:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                        </tr>
+                    </thead>
+                    <body>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>Some unique string/number for the card.</td>
+                            <td><code>1</code>, <code>fire_goblin</code>, <code>ace_spades</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>quantity</code></td>
+                            <td>Determines how many copies of a card there will be.</td>
+                            <td><code>10</code></td>
+                        </tr>
+                    </body>
+                </table>
+                <p>An example csv:</p>
+                <pre class="highlight-csv align headers nohighlight"><code>id,quantity,name,description,type,stat_atk,image
+goblin,5,Fire Goblin,A tiny little fire goblin. He &lt;strong&gt;hot&lt;/strong&gt;.,fire,5,examples/fantasy/im/fire_goblin.jpg
+wight,2,Wight,Used to be a famous singer.,undead,10,examples/fantasy/im/wight.jpg
+pory,5,Pory,What even is this thing?,fairy,1,examples/fantasy/im/pory.jpg
+werebear,1,Werebear,"It's &lt;em&gt;huge&lt;/em&gt;.
+
+Hope we don't get caught by it.",nature,15,examples/fantasy/im/werebear.jpg
+natural_elixir,2,Nature's Elixir.,So &lt;em&gt;fancy&lt;/em&gt;.//Why is there no healing?,nature,,examples/fantasy/im/natural_elixir.jpg</code></pre>
+                <p>Once you have your csv file ready, you can upload it via the file input on the main page.</p>
+                <p>Your card data will persist page refreshes, meaning you can update your design without having to reload the csv every time.</p>
+                <p>If you get sick of having to re-upload your file every time you make a change, then if you are running a "served" version of the card creator (via http), then you can enter a pathname at the following line in <code>index.html</code></p>
+                <pre><code>// If you are able to run a local webserver, then put the relative filename
+// to the csv file here to prevent having to choose it via the file input
+// every single time :)
+file: null,
+
+// For example:
+file: 'cards.csv',</code></pre>
+                <p>The path must be relative to the root folder (where <code>index.html</code> resides). You can then either just refresh the page, or click the "Refresh file and template" button.</p>
+            </section>
+            <section>
+                <h2 id="card-design">Card Design</h2>
+            </section>
+            <section>
+                <h2 id="card-transform">Data Transformation</h2>
+                <p>It can be helpful to process your data for inclusion on the cards.</p>
+                <p>This has numerous benefits, but most of all, it allows you to have easy to write and maintain csv files, while still having unparalelled functionality.</p>
+                <p>There are two types of transformations you can do:
+                    <ul>
+                        <li>Pre-processing</li>
+                        <li>Inline</li>
+                    </ul>
+                    Both have different functions, but both are useful.
+                </p>
+                <h3 id="data-prep-transform-preprocessing">Data Pre-processing</h3>
+                <p>Inside <code>index.html</code> you will find the following lines:</p>
+                <pre><code>// Change this function to pre-process any of the card data.
+processCard: (card, row_index, card_index, subcard_index) => {
+    // you can process the card data any way you like.
+    return card;
+},</code></pre>
+                <p>This is a javascript function, within which you can modify any of the card data you like before it is displayed.</p>
+                <p>You can even use it to add new columns to your data.</p>
+                <p>The app takes each row and repeats it <code>quantity</code> number of times, and passes numerous indexes to this function to help you keep track.</p>
+                <p>The arguments passed to the function are:</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><code>card</code></td>
+                            <td>A plain javascript object whose keys are the headers in your csv file.</td>
+                        </tr>
+                        <tr>
+                            <td><code>row_index</code></td>
+                            <td>The row number from the csv file (0 indexed).</td>
+                        </tr>
+                        <tr>
+                            <td><code>card_index</code></td>
+                            <td>The card number from the csv file (0 indexed). This is respective of quantity, so will always be the same or larger than row index.</td>
+                        </tr>
+                        <tr>
+                            <td><code>subcard_index</code></td>
+                            <td>The index of this card in the current row.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>For example, if a csv contains 50 rows and each row has a <code>quantity</code> of 2, then the <code>row_index</code> would go from 0 to 49, the <code>card_index</code> would go from 0 to 99 and the <code>subcard_index</code> would cycle between 0 and 1.</p>
+                <h4>Example using the above CSV</h4>
+                <pre><code>processCard: (card, row_index, card_index, subcard_index) => {
+
+    // Make an icon image based on the card's type.
+    card.icon_image = `images/${card.type}_icon.png`;
+
+    // Give each card a blank healing stat.
+    card.stat_healing = null;
+
+    // Make all fairy cards have a healing stat.
+    if (card.type === 'fairy') {
+        card.stat_healing = 5;
+    }
+
+    // Create a string based on the card's position in the deck.
+    card.position = `${row_index} / 5 | ${card_index} / 15`;
+
+    return card;
+},</code></pre>
+                <p>Then, in your card template, you can refer to the new columns, or anything else you might add/change.</p>
+                <h3 id="data-prep-transform-inline">Inline Processing</h3>
+                <p>A number of functions are included to help easily translate your data to a usable format.</p>
+                <p>You can take a look at <code>js/helpers.js</code> for more information, but here is a summary:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function</th>
+                            <th>Description</th>
+                            <th>Example input</th>
+                            <th>Example output</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>titleCase</td>
+                            <td>Makes a string title case</td>
+                            <td><code>heLLo thERe</code></td>
+                            <td><code>Hello There</code></td>
+                        </tr>
+                        <tr>
+                            <td>ucfirst</td>
+                            <td>Uppercases the first letter of a string, and lower cases the rest</td>
+                            <td><code>heLLo thERe</code></td>
+                            <td><code>Hello there</code></td>
+                        </tr>
+                        <tr>
+                            <td>snakeCase</td>
+                            <td>Transforms a string to snake_case</td>
+                            <td><code>heLLo thERe</code></td>
+                            <td><code>hello_there</code></td>
+                        </tr>
+                        <tr>
+                            <td>slug</td>
+                            <td>Transforms a string to a "slug", safe for URLs and lowercase</td>
+                            <td><code>heLLo thERe</code></td>
+                            <td><code>hello-there</code></td>
+                        </tr>
+                        <tr>
+                            <td>markdownParse</td>
+                            <td>Parses a string as markdown</td>
+                            <td><code>Hello *there*</code></td>
+                            <td><code>Hello &lt;em&gt;<em>there</em>&lt;/em&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>shuffle</td>
+                            <td>Shuffles an array</td>
+                            <td><code>['a', 'b', 'c', 'd']</code></td>
+                            <td><code>['d', 'a', 'c', 'b']</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Example usage:</p>
+                <pre class="language-html"><code>&lt;div class="card"&gt;
+    &lt;h1 x-text="titleCase(card.name)"&gt;&lt;/h1&gt;
+    &lt;template x-for="question in shuffle(card.questions)"&gt;
+        &lt;div x-text="`${markdownParse(question)}`"&gt;&lt;/div&gt;
+    &lt;/template&gt;
+    &lt;img :src="slug(card.name).png"&gt;
+&lt;/div&gt;</code></pre>
+                <p>You can find loads of examples of usage in the examples folder. Here is the fantasy example:</p>
+                <pre class="language-html"><code data-file-contents="/examples/fantasy/card.html">// sorry, this example only works in "served" mode.</code></pre>
+            </section>
+            <section>
+                <h1 id="styling-the-cards">Styling the Cards</h1>
+                <p>Once you have the basic structure of the cards set up, you can now move on to styling.</p>
+                <p>In reality, you will go back and forth between the layout and the style continuously.</p>
+                <p>To style your cards, open up <code>sass/card.scss</code>, and you'll find the following:</p>
+                <pre class="language-scss"><code data-file-contents="/sass/card-example.scss">// sorry, this example only works in "served" mode.</code></pre>
+                <p>Again, you can find some examples in the <code>examples</code> directory.</p>
+                <h2 id="sass-vs-css">SASS vs CSS</h2>
+                <p>If you're familiar with CSS, you can use SASS just like css - it will give you the same result.</p>
+                <p>However, SASS offers many advantages that CSS lacks.</p>
+                <p>My favorite things that SASS offers are:</p>
+                <ul>
+                    <li>Variables - e.g. <code>$color-red: rgba(255,0,0,1)</code></li>
+                    <li>Color manipulation - e.g. <code>darken($color-red, 10%)</code></li>
+                    <li>Arrays and Loops</li>
+                    <li>Nesting</li>
+                </ul>
+                <p>The last point is the killer for me - you can nest css rules in a very logical way.</p>
+                <pre class="language-scss"><code>// instead of writing this in css:
+.container {
+    color: red;
+}
+.container .subelement {
+    color: blue;
+}
+.container .subelement .text {
+    padding: 1rem;
+}
+.container .subelement .text .highlight {
+    font-weight: bold;
+    background: yellow;
+}
+.container.alternate .subelement {
+    color: green;
+}
+.container.alternate .subelement .text .highlight {
+    color: pink;
+}
+@media only print {
+    .container {
+        color: black;
+    }
+    .container .subelement {
+        color: black;
+    }
+}
+
+// in scss you can write it like this:
+.container {
+    color: red;
+    @media only print {
+        color: black;
+    }
+    .subelement {
+        color: blue;
+        @media only print {
+            color: black;
+        }
+        .text {
+            padding: 1rem;
+            .highlight {
+                font-weight: bold;
+                background: yellow;
+            }
+        }
+    }
+    &.alternate .subelement {
+        color: green;
+        .text .highlight {
+            color: pink;
+        }
+    }
+}
+</code></pre>
+                <p>For whatever reason, I find this so much easier than non-nested CSS. It makes it so much clearer what styles apply in which containers.</p>
+                <h2 id="styling-tips">Styling Tips</h2>
+                <p>You can apply styles only on screen or only for print with the following code:</p>
+                <pre class="language-scss"><code>@media only screen {
+    // non print styles go here
+}
+
+@media only print {
+    // print styles go here
+}</code></pre>
+                <p><code>sass/app.scss</code> includes some helpful default styling, including an automatic bleed setting.</p>
+                <p>There is some more information about bleed settings in the <a href="#printing">printing section.</a></p>
+            </section>
+            <section>
+                <h2 id="printing">Printing</h2>
+                <p>I highly recommend using <strong>Google Chrome</strong> for any and all printing.</p>
+                <p>Press ctrl+p or 3 dots > print, and use the <strong>"Save as PDF"</strong> output option.</p>
+                <p>Do <strong>not</strong> use Adobe PDF or Microsoft print to PDF - they are <em>rubbish and inconvenient</em> in comparison.</p>
+                <h3 id="microsoft-pdf">Microsoft print to PDF</h3>
+                <p>Microsoft print to PDF doesn't allow custom page sizes, so can't print individual cards.</p>
+                <h3 id="adobe-pdf">Adobe PDF</h3>
+                <p>Adobe PDF rasterises random parts of the image and compresses them horribly. I cannot explain what it does, because it's so random.</p>
+                <figure>
+                    <img width="640" src="im/adobe-pdf-example.png">
+                    <figcaption>An example printed using Adobe pdf - absolute garbage</figcaption>
+                </figure>
+                <p>It's funny, because if you open up the generated file in illustrator, there <em>is</em> nice vector data there, but overlaid on top is overly compressed raster data in random chunks.</p>
+                <p>However, it's far too much work to edit all of that, and any necessarily raster data on the image is heavily compressed for whatever reason, making it no good for print.</p>
+                <p>You can get better results from Adobe PDF by editing the advanced settings, but you also need to set up page sizes for any page size you require - it doesn't respect page sizes from CSS.</p>
+                <h3 id="bleed">Bleed settings</h3>
+                <p>When printing at home, I find having a bleed cumbersome - so you may want to set the bleed to 0 when printing at home.</p>
+                <h3 id="printing-screen">Printing for Screen</h3>
+                <p>When exporting for screen, the best way is to use the <strong>Individual</strong> page setting. This prints exactly one card per page.</p>
+                <img width="640" src="im/print-screen-chrome.png">
+                <p>You can then use software of your choice to convert the pdf to regular image files (png, jpg, whatever).</p>
+                <h4 id="print-screen-imagemagick">Using Imagemagick</h4>
+                <p><a href="https://imagemagick.org/index.php">Imagemagick</a> is a great choice for converting on the command line, and is high quality and quick.</p>
+                <p>You can use the following command to convert a pdf to png, for example:</p>
+                <pre><code>magick convert -density 600 input.pdf cards.png</code></pre>
+                <p>Note, if you need to rename the files in a particular way, <a href="https://antp.be/software/renamer">Ant Renamer</a> is great, simple software!</p>
+                <p>This will create one image file per pdf page at 600 DPI. Replace the 600 with whatever DPI you want the output to be.</p>
+                <h4 id="print-screen-illustrator">Using Adobe Illustrator</h4>
+                <p>Open the PDF in illustrator, and select all pages. I would untick the "Import PDF pages as links" option if you want to do any further editing. It doesn't really matter if you're not doing any editing.</p>
+                <img src="im/illustrator-import-example.png">
+                <p>Now just File > Export > Export As and make sure "Use Artboards" is ticked.</p>
+                <img src="im/illustrator-export-example.png">
+                <h3 id="printing-rgb">Printing in RGB</h3>
+                <p>RGB printing is pretty easy - just follow the steps above, but instead of using the Individual page size, you can use a physical page size.</p>
+                <p>This is really no different to printing for screen.</p>
+                <h3 id="printing-cmyk">Printing in CMYK</h3>
+                <p>There are a few considerations when printing for CMYK. Browsers have zero support for CMYK output, so we'll have to get creative.</p>
+                <p>For the most part, you can just rely on RGB to CMYK conversions in image editing software - however, there is one trick that will help if you need specific elements to be specific colours.</p>
+                <p>One such example is with fine text - often you will want small, fine text to be <code>CMYK(0%,0%,0%,100%)</code> to avoid ghosting from small registration misalignment.</p>
+                <p>To get around this, I would create a css variable for any potential CMYK colour you would like, and then change it to another, specific colour that is not used elswhere in your design:</p>
+                <pre class="language-scss"><code>:root {
+    --text-color: rgb(0,0,0);
+}
+.card {
+    color: var(--text-color);
+}
+.print-cmyk {
+    --text-color: rgb(255,0,255);
+}</code></pre>
+                <p>Then use that class on your cards when you're printing for CMYK:</p>
+                <pre><code>&lt;div class="card print-cmyk"&gt;</code></pre>
+                <p>You should end up with something like this:</p>
+                <img width="320" src="im/card-print-writing.png">
+                <p>Then, when you import the file into illustrator, go to edit, color settings and make sure the colors are set up how you wish.</p>
+                <img src="im/illustrator-color-settings.png">
+                <p>If in doubt, ask your printer. If they don't come up with a satisfactory answer, use sRGB for RGB and Coated FOGRA39 for CMYK.</p>
+                <p>You'll want to CMYK preseve numbers and use Adobe (ACE) with relative colorimetric intent and black point compensation on.</p>
+                <p>Note, if your cards are highly photographic in nature, then perceptual intent may work better for you. Relative colorimetric will be a fairly pleasing representation while achieving good strong colors.</p>
+                <p>Now go to File > Document Colour mode and change it to CMYK Color. This will convert it from RGB to CMYK.</p>
+                <p>The last step is to convert your colors.</p>
+                <ol>
+                    <li>Select all with Ctrl + A or Select > Select All.</li>
+                    <li>Go to Edit > Edit Colors > Recolor Artwork</li>
+                    <li>Select Advanced Options</li>
+                    <li>Find your color in the list - note it will have changed RGB values, so you will have to identify it by sight.</li>
+                </ol>
+                <img src="im/illustrator-edit-colors.png">
+                <p>Now you can export the cards as above, but as CMYK files.</p>
+                <p>Most printers prefer PDF, so I would go File > Save a Copy, and choose the "PDF/X-4:2008" preset, but for cards I would edit the following settings:</p>
+                <ul>
+                    <li>General > Optimise for Fast Web View <strong>ON</strong></li>
+                    <li>Compression > Color Bitmap Images
+                        <ul>
+                            <li><strong>Bicubic Downsampling To</strong></li>
+                            <li><strong>600ppi</strong> for images above <strong>750ppi</strong></li>
+                            <li>Compression <strong>Automatic (JPEG)</strong></li>
+                            <li>Image Quality <strong>Maximum</strong></li>
+                        </ul>
+                    </li>
+                    <li>Compression > Compress Text and Line Art <strong>ON</strong></li>
+                    <li>Marks and Bleed all <strong>OFF</strong></li>
+                    <li>Output > Color Conversion <strong>No Conversion</strong></li>
+                </ul>
+                <p>And that's it! Happy printing :)</p>
+            </section>
+        </main>
+    </body>
+
+</html>

@@ -1,0 +1,28 @@
+id,quantity,question,correct_answer,incorrect_answer_1,incorrect_answer_2
+Q1,1,What country has the highest life expectancy?,Hong Kong,Japan,Finland
+Q2,1,Where would you be if you were standing on the Spanish Steps?,Rome,Madrid,New York
+Q3,1,"What city is known as ""The Eternal City""?",Rome,London,Tokyo
+Q4,1,What is the most common surname in the United States?,Smith,Chan,Rodriguez
+Q5,1,What disease commonly spread on pirate ships?,Scurvy,Rickets,Malaria
+Q6,1,Who was the Ancient Greek God of the Sun?,Apollo,Hermes,Horae
+Q7,1,What was the name of the crime boss who was head of the feared Chicago Outfit?,Al Capone,Pablo Escobar,Frank Costello
+Q8,1,What year was the United Nations established?,1945,1935,1956
+Q9,1,Who has won the most total Academy Awards?,Walt Disney,Steven Spielberg,Charlie Chaplin
+Q10,1,What artist has the most streams on Spotify?,Drake,Taylor Swift,The Beatles
+Q11,1,How many minutes are in a full week?,"10,080","2,460","64,560"
+Q12,1,What car manufacturer had the highest revenue in 2020?,Volkswagen,Fiat,Toyota
+Q13,1,How many elements are in the periodic table?,118,256,99
+Q14,1,"What company was originally called ""Cadabra""?",Amazon,eBay,Google
+Q15,1,How many faces does a Dodecahedron have?,12,10,20
+Q16,1,Queen guitarist Brian May is also an expert in what scientific field?,Astrophysics,Medicine,Chemisty
+Q17,1,Aureolin is a shade of what color?,Yellow,Blue,White
+Q18,1,How many ghosts chase Pac-Man at the start of each game?,4,3,2
+Q19,1,What Renaissance artist is buried in Rome's Pantheon?,Raphael,Michaelangelo,Donatello
+Q20,1,"What shoe brand makes the ""Mexico 66""?",Onitsuka Tiger,Nike,Adidas
+Q21,1,What game studio makes the Red Dead Redemption series?,Rockstar Games,Epic Games,Larial Studios
+Q22,1,Who was the last Tsar of Russia?,Nicholas II,Nicholas III,Vladimir Lenin
+Q23,1,What country drinks the most coffee per capita?,Finland,Tokyo,London
+Q24,1,Which planet in our solar system is the hottest?,Venus,Mercury,Earth
+Q25,1,What is the 4th letter of the Greek alphabet?,Delta,Gamma,Omega
+Q26,1,What sports car company manufactures the 911?,Porsche,Ford,Ferrari
+Q27,1,Which planet has the most moons?,Saturn,Mars,Jupiter

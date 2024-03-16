@@ -1,0 +1,8 @@
+id,quantity,name,description,type,stat_atk,stat_healing,cost,image
+goblin,5,Fire Goblin,A tiny little fire goblin. He <strong>hot</strong>.,fire,5,,1,examples/fantasy/im/fire_goblin.jpg
+wight,2,Wight,Used to be a famous singer.,undead,10,,2,examples/fantasy/im/wight.jpg
+pory,5,Pory,What even **is** this thing?,fairy,1,,1,examples/fantasy/im/pory.jpg
+natural_elixir,2,Nature's Elixir.,So <em>fancy</em>.//This will heal any ailments.,nature,,5,1,examples/fantasy/im/natural_elixir.jpg
+werebear,1,Werebear,"It's <em>huge</em>.
+
+Hope we don't get caught by it.",nature,15,,3,examples/fantasy/im/werebear.jpg

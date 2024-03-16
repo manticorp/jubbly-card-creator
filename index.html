@@ -1,0 +1,331 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Card Creator</title>
+        <link rel="stylesheet" href="dist/css/app.css">
+        <link rel="stylesheet" href="dist/css/card.css">
+        <meta name="description" content="">
+
+        <meta property="og:title" content="">
+        <meta property="og:type" content="">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="">
+        <meta property="og:image:alt" content="">
+
+        <link rel="icon" href="/favicon.ico" sizes="any">
+        <link rel="icon" href="/icon.svg" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="icon.png">
+
+        <meta name="theme-color" content="#fafafa">
+
+        <script src="vendor/alpine.persist.3.13.7.min.js" defer></script>
+        <script src="vendor/alpine.3.13.7.min.js" defer></script>
+        <script src="dist/js/app.js"></script>
+
+        <script>
+        </script>
+    </head>
+
+    <body :class="[`print-${page_name}`]"
+        x-data="{
+
+            // Change these default settings if you like!
+            // That way, you can have them the same every time you
+            // refresh the page (which you'll be doing a lot)
+            units: $persist('mm'),
+            card_width: $persist(63),
+            card_height: $persist(88),
+            card_bleed: $persist(3),
+            page_width: $persist(210),
+            page_height: $persist(297),
+            card_cols_per_page: $persist(3),
+            card_rows_per_page: $persist(3),
+            center: $persist('1/1'),
+            page_name: $persist('individual'),
+
+            // If you're running via a local web server, you can use this to load examples.
+            // modern: poker size (63 x 88mm)
+            // classic: responsive - can work pretty much any size
+            // fantasy: best in poker size (63 x 88mm), but any portait aspect card works fine
+            // tarot: only tarot size (70 x 120mm)
+            example: null, // 'modern', 'tarot', 'fantasy' or 'classic'
+
+            // If you are able to run a local webserver, then put the relative filename
+            // to the csv file here
+            file: null,
+
+            // Template file (e.g. 'card.html')
+            template: 'card.html',
+
+            // Set to true to enable inline card html
+            inline_card_html: false,
+
+            // The HTML for each card
+            card_html: $persist(null),
+
+            // Change this function to pre-process any of the card data.
+            processCard: (card, row_index, card_index, subcard_index) => {
+                // you can process the card data any way you like.
+                return card;
+            },
+
+            get filteredCards() {
+                const cards = [];
+                let rownum  = 0;
+                let cardnum = 0;
+                for (let card of this.cards) {
+                    const quantity = card.quantity ?? 1;
+                    for (let i = 0; i < quantity; i++) {
+                        let subcard = Object.assign({}, card);
+                        if (typeof subcard.id ==='undefined') {
+                            subcard.id = rownum;
+                        }
+                        subcard = this.processCard(subcard, rownum, cardnum, i);
+                        subcard._index = i+1;
+                        cards.push(subcard);
+                        cardnum++;
+                    }
+                    rownum++;
+                }
+                console.info('filteredCards', cards);
+                return cards;
+            },
+            refreshAll: function() {
+                // load the template if present
+                this.refreshTemplate();
+                // load the file if present
+                this.refreshFile();
+            },
+            refreshTemplate: function() {
+                if (this.template && location.href.startsWith('http')) {
+                    fetch(this.template + '?t=' + (new Date().getTime()))
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text();
+                            } else {
+                                if (response.status === 404) {
+                                    alert(`Could not find ${this.template} - did you forget to create it?`);
+                                }
+                                throw new Error('Request error getting template');
+                            }
+                        })
+                        .then(html => {
+                            this.card_html = html;
+                        }).catch(e => {
+                            console.error(e);
+                        });
+                }
+            },
+            refreshFile: function() {
+                if (this.file && location.href.startsWith('http')) {
+                    fetch(this.file + '?t=' + (new Date().getTime()))
+                        .then(response => {
+                            if (response.ok) {
+                                return response.text();
+                            } else {
+                                if (response.status === 404) {
+                                    alert(`Could not find ${this.file} - did you forget to create it?`);
+                                }
+                                throw new Error('Request error getting file');
+                            }
+                        })
+                        .then(a => parseCsv(a))
+                        .then(c => this.cards = c)
+                        .catch(e => {
+                            console.error(e);
+                        });
+                    ;
+                }
+            },
+            refreshHtml: function() {
+                if (this.card_html) {
+                    document.querySelector('#cards').innerHTML = `<template x-for='card in filteredCards'>${this.card_html}</template>`;
+                }
+            },
+            card_preset: null,
+            page_preset: null,
+            cards: $persist([])
+        }"
+        x-init="
+        if (example) {
+            // Load the example variables, if we have one
+            file     = `examples/${example}/cards.csv`;
+            template = `examples/${example}/card.html`;
+        }
+        // We can only load external files via http unfortunately due to CORS policy
+        if (location.href.startsWith('http')) {
+            refreshAll();
+            $watch('card_preset', (value) => {
+                const p = presets.cards[value];
+                if (p) {
+                    if (p.width) {
+                        card_width = p.width;
+                    }
+                    if (p.height) {
+                        card_height = p.height;
+                    }
+                }
+            });
+            $watch('page_preset', (value) => {
+                const p = presets.pages[value];
+                if (p) {
+                    if (p.width) {
+                        page_width = p.width;
+                    }
+                    if (p.height) {
+                        page_height = p.height;
+                    }
+                }
+            });
+            $watch('card_html', (value) => {
+                refreshHtml();
+            });
+        }
+        setTimeout(() => refreshHtml(), 1);"
+        x-effect="
+            const r = document.querySelector(':root');
+            const c = center.split('/').map(a => a/1);
+            r.style.setProperty('--card-width',  numberWithOptionalUnits(card_width, units));
+            r.style.setProperty('--card-height', numberWithOptionalUnits(card_height, units));
+            r.style.setProperty('--card-bleed',  numberWithOptionalUnits(card_bleed, units));
+            r.style.setProperty('--page-width',  numberWithOptionalUnits(page_width, units));
+            r.style.setProperty('--page-height',  numberWithOptionalUnits(page_height, units));
+            r.style.setProperty('--card-cols-per-page', card_cols_per_page);
+            r.style.setProperty('--card-rows-per-page', card_rows_per_page);
+            r.style.setProperty('--center-horizontally', c[0]);
+            r.style.setProperty('--center-vertically', c[1]);
+        "
+        >
+        <div class="app">
+            <nav class="noprint">
+                <div class="controls" x-data="{settings_open: true}" :class='[settings_open ? "open" : "closed"]'>
+                    <h1 @click="settings_open = !settings_open">Settings</h1>
+                    <div class="group" x-data="{open: true}" :class='[open ? "open" : "closed"]'>
+                        <h2 class="group-title" @click="open = !open">Card Settings</h2>
+                        <div class="inputs">
+                            <div class="field">
+                                <label for="card_width">Width</label>
+                                <input x-model="card_width" id="card_width" name="card_width" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="card_height">Height</label>
+                                <input x-model="card_height" id="card_height" name="card_height" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="card_bleed">Bleed</label>
+                                <input x-model="card_bleed" id="card_bleed" name="card_bleed" type="text">
+                            </div>
+                            <div class="field">
+                                <label for="card_preset">Defaults</label>
+                                <select x-model="card_preset" id="card_preset" name="card_preset">
+                                    <option>Select</option>
+                                    <template x-for="(preset, key) in presets.cards">
+                                        <option :value="key" x-text="`${preset.name} [${preset.width} x ${preset.height}]`"></option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="group" x-data="{open: true}" :class='[open ? "open" : "closed"]'>
+                        <h2 class="group-title" @click="open = !open">Page Settings</h2>
+                        <div class="inputs">
+                            <div class="field">
+                                <label for="page_name">Print Page Size</label>
+                                <select x-model="page_name" id="page_name" name="page_name">
+                                    <option value="auto">Auto</option>
+                                    <option value="individual">Individual</option>
+                                    <option value="a4">A4</option>
+                                    <option value="a3">A3</option>
+                                    <option value="a2">A2</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="page_width">Width</label>
+                                <input x-model="page_width" id="page_width" name="page_width" type="text">
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="page_height">Height</label>
+                                <input x-model="page_height" id="page_height" name="page_height" type="text">
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="card_cols_per_page">Cols per Page</label>
+                                <input x-model="card_cols_per_page" id="card_cols_per_page" name="card_cols_per_page" type="number" min="1" max="999" step="1">
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="card_rows_per_page">Rows per Page</label>
+                                <input x-model="card_rows_per_page" id="card_rows_per_page" name="card_rows_per_page" type="number" min="1" max="999" step="1">
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="center">Centering</label>
+                                <select x-model="center" id="center" name="center">
+                                    <option value="0/0">No centering</option>
+                                    <option value="0/1">Center Vertically</option>
+                                    <option value="1/0">Center Horizontally</option>
+                                    <option value="1/1">Center Both</option>
+                                </select>
+                            </div>
+                            <div class="field" x-show="page_name==`custom`">
+                                <label for="card_preset">Defaults</label>
+                                <select x-model="page_preset" id="page_preset" name="page_preset">
+                                    <option>Select</option>
+                                    <template x-for="(preset, key) in presets.pages">
+                                        <option :value="key" x-text="`${preset.name} [${preset.width} x ${preset.height}]`"></option>
+                                    </template>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <template x-if="inline_card_html">
+                        <div class="group" x-data="{open: true}" :class='[open ? "open" : "closed"]'>
+                            <h2 class="group-title" @click="open = !open">Card Design</h2>
+                            <div class="inputs">
+                                <div class="field">
+                                    <label for="card_html">Card HTML</label>
+                                    <textarea cols="100" rows="10" x-model="card_html" id="card_html" name="card_html"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="group" x-data="{open: true}" :class='[open ? "open" : "closed"]'>
+                        <h2 class="group-title" @click="open = !open">Other Settings</h2>
+                        <div class="inputs">
+                            <div class="field">
+                                <label for="units">Default Units</label>
+                                <select x-model="units" id="units" name="units">
+                                    <option value="mm">mm</option>
+                                    <option value="in">inches</option>
+                                    <option value="pt">points</option>
+                                    <option value="px">pixels</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="file">CSV File</label>
+                                <input type="file" accept=".csv" @change="loadCsv($event).then(c => cards = c)">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="help">
+                        <a href="/docs/help.html">Help & Documentation</a> &bullet;
+                        <button @click="if (confirm('Are you sure?')) { localStorage.clear(); location.href = location.href; }">Clear local storage</button> &bullet;
+                        <button @click="refreshAll();" x-text="`Refresh ${(file)?'file and ':''}template`"></button>
+                    </div>
+                </div>
+            </nav>
+            <main>
+                <div id="cards">
+                    <!-- the contents here are replaced with card.html -->
+                    <!-- If you are running serverless, replace the entire contents of this template with your card html -->
+                    <template x-for="card in filteredCards">
+                        <div class="card">
+                            <div x-text="card.name"></div>
+                        </div>
+                    </template>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

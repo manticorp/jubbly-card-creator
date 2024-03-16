@@ -1,0 +1,114 @@
+$c-undead: rgb( 80,  80,  90);
+$c-fire:   rgb(255, 60,   0);
+$c-fairy:  rgb(255, 180, 255);
+$c-nature: rgb(0, 180, 10);
+
+$c-white:  rgb(255, 255, 255);
+$c-faded:  rgb(235, 235, 225);
+$c-black:  rgb(  0,   0,   0);
+
+$types:
+  'undead' $c-undead $c-white,
+  'fire'   $c-fire   $c-white,
+  'fairy'  $c-fairy  $c-white,
+  'nature' $c-nature $c-white,
+;
+
+.card.example-fantasy {
+
+    --interior-padding: 3mm;
+    --title-height: 8mm;
+    --stat-height: 8mm;
+    --available-height: calc(var(--card-height) - var(--interior-padding) * 2);
+    --available-width: calc(var(--card-width) - var(--interior-padding) * 2);
+    --image-width: var(--available-width);
+    --image-height: var(--available-width);
+    --desc-overlap: 10mm;
+    --desc-height: calc((var(--available-height) - (var(--image-height) + var(--title-height) + var(--stat-height))) + var(--desc-overlap));
+
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+
+    @each $type-name, $base-color, $contrast-color in $types {
+        &.type-#{$type-name} {
+            background: $base-color;
+            h1 {
+                color: $contrast-color;
+                background: rgb(0,0,0);
+                background: linear-gradient(0deg, rgba(0,0,0,1) 0%, darken($base-color, 25%) 15%, darken($base-color, 25%) 85%, rgba(255,255,255,1) 100%);
+            }
+        }
+    }
+    .print-area {
+        padding: var(--interior-padding);
+        position: relative;
+        .cost {
+            --cost-dia: 10mm;
+            position: absolute;
+            right: 0;
+            top: 2mm;
+            border-radius: var(--cost-dia);
+            height: var(--cost-dia);
+            width: var(--cost-dia);
+            text-align: center;
+            background: rgba(255,215,0);
+            border: 1mm solid rgba(225,175,0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14pt;
+        }
+        h1 {
+            // --extend: calc(var(--interior-padding) + var(--card-bleed));
+            --extend: 1mm;
+            font-size: 13pt;
+            width: calc(100%  + var(--extend) * 2);
+            margin: 0;
+            height: var(--title-height);
+            padding: 1mm calc(var(--extend) + 1mm);
+            margin: 0 calc(-1 * var(--extend));
+            text-align: center;
+            border-radius: 1mm;
+        }
+        img.main-image {
+            width: 100%;
+            height: var(--image-height);
+            z-index: -1;
+        }
+        .description {
+            --top-margin: -10mm;
+            width: 100%;
+            height: var(--desc-height);
+            margin-top: var(--top-margin);
+            background: rgb(255,255,255);
+            background: linear-gradient(180deg, rgba($c-faded, 0) 0%, rgba($c-faded, .9) 2mm, rgba($c-faded, .9) calc((-1 * var(--top-margin)) - 1mm), $c-faded calc((-1 * var(--top-margin))), $c-faded 100%);
+            padding: 5mm 2mm 1mm;
+            font-weight: 500;
+            font-size: 11pt;
+            z-index: 99;
+            position: relative;
+        }
+        .stats {
+            background: $c-faded;
+            border-top: 1pt solid grey;
+            height: var(--stat-height);
+            padding: 1mm;
+            text-align: center;
+            width: 100%;
+        }
+        .footer {
+            text-align: center;
+            font-size: 7pt;
+        }
+    }
+
+    @media print {
+        @each $type-name, $base-color, $contrast-color in $types {
+            &.type-#{$type-name} {
+                border: 0.5pt solid darken($base-color, 10%);
+            }
+        }
+    }
+}

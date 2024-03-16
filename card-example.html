@@ -1,0 +1,24 @@
+<!--
+
+HERE is where the action starts
+
+Data from your csv can be access via card.header_name
+The headers are transformed to a "slugged" format, so it is all
+lower case, and spaces are replaced with "_"
+
+For example, "Enchanted Monkey" would become "enchanted_monkey"
+and would be accessed like "card.enchanted_monkey"
+
+Leave the class='card' for automagic default styling for print etc.
+It's a good idea to leave the :id and :key as well :)
+
+ -->
+<div
+    class="card"
+    :id="`card-${card.id}-${card._index}`"
+    :key="`card-${card.id}-${card._index}`"
+>
+    <div class="print-area"> <!-- keep this print area to have magic bleed settings -->
+        <h1 x-text="card.name"></h1>
+    </div>
+</div>

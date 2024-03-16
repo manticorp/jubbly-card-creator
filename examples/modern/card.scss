@@ -1,0 +1,55 @@
+.card.example-modern {
+    font-family: "Quicksand", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    background: linear-gradient(-30deg, #7117EA 0%, #EA6060 100%);
+    position: relative;
+    .print-area {
+        .logo {
+            position: absolute;
+            top: calc(var(--card-bleed) + 6mm);
+            left: calc(var(--card-bleed) + 6mm);
+            width: 15mm;
+        }
+        .qa {
+            font-size: 11pt;
+            position: absolute;
+            transform-origin: top left;
+            transform: rotate(-30deg);
+            left: calc(-1 * var(--card-bleed) - 10mm);
+            top: 48mm;
+            width: calc(var(--card-full-width) * 1.5);
+            height: var(--card-full-height);
+            .question {
+                width: 100%;
+                padding: 2mm 23mm 2mm 22mm;
+                background: gold;
+                box-shadow: 0 0 2mm rgba(0,0,0,0.5);
+            }
+            .answers {
+                width: 100%;
+                padding: 2mm 0mm 2mm 22mm;
+                display: flex;
+                flex-direction: column;
+                gap: 2mm;
+                .answer {
+                    padding: 1mm 45mm 1mm 2mm;
+                    background: gold;
+                    box-shadow: 0 0 2mm rgba(0,0,0,0.5);
+                }
+                .correct {
+                    font-weight: 900;
+                }
+            }
+        }
+        .footer {
+            position: absolute;
+            bottom: calc(var(--card-bleed) + 2mm);
+            left: 0;
+            width: 100%;
+            color: white;
+            font-size: 7pt;
+            text-align: center;
+        }
+    }
+}

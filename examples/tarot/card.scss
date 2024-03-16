@@ -1,0 +1,51 @@
+.card.example-tarot {
+    background-color: #0d251e;
+    background-size: cover;
+    position: relative;
+    font-family: 'Cinzel', serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    .color-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        mix-blend-mode: soft-light;
+    }
+    .overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-image: url("/examples/tarot/bg.png");
+        background-size: cover;
+    }
+    .name {
+        font-size: 12pt;
+        color: #f2c45e;
+        position: absolute;
+        top: calc(2.4mm + var(--card-bleed));
+        text-align: center;
+        width: 100%;
+    }
+    .number {
+        font-size: 12pt;
+        color: #f2c45e;
+        position: absolute;
+        bottom: calc(2.6mm + var(--card-bleed));
+        text-align: center;
+        width: 100%;
+    }
+    .print-area {
+        position: relative;
+        .artwork {
+            position: absolute;
+            top: 9.5mm;
+            left: 4.8mm;
+            width: 59.8mm;
+            height: 100.5mm;
+        }
+    }
+}

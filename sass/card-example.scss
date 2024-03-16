@@ -1,0 +1,19 @@
+// examples - remove this line if you like, but you won't be able to use examples
+@import "examples";
+
+.card {
+  // Put your styles here
+  .print-area {
+    // This is everything inside the bleed. All of your
+    // card's true content should be in this container
+
+    // You can keep or remove the following - it shows corner
+    // radius and area inside the bleed
+    @media only screen {
+      border: 1px solid grey;
+      border-radius: 3mm;
+      // Any styles you want to only show on screen, not print,
+      // can go in here as well :)
+    }
+  }
+}

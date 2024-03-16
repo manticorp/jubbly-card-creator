@@ -1,0 +1,244 @@
+:root {
+    // Set up a bunch of variables.
+    // These are modified by the main application, so do not
+    // edit them here, nothing will change
+    --card-width: 100mm;
+    --card-height: 100mm;
+    --card-bleed: 3mm;
+
+    --page-width: 210mm;
+    --page-height: 297mm;
+
+    --card-rows-per-page: 3;
+    --card-cols-per-page: 3;
+
+    --center-horizontally: 1;
+    --center-vertically: 1;
+
+    --page-name: a4;
+
+    // calculated variables, for convenience
+    --card-full-width: calc(var(--card-width) + var(--card-bleed) * 2);
+    --card-full-height: calc(var(--card-height) + var(--card-bleed) * 2);
+
+    // margins that depend on page size set above for
+    // centering the content
+    --page-margin-x: calc(var(--center-horizontally) * ((var(--page-width) - (var(--card-cols-per-page) * var(--card-full-width)))/2));
+    --page-margin-y: calc(var(--center-vertically) * ((var(--page-height) - (var(--card-rows-per-page) * var(--card-full-height)))/2));
+}
+
+$c-bg: rgb(245,245,235);
+$c-text: rgb(0,0,0);
+$font-sans: 'Helvetica', 'Segoe-Ui', 'Roboto', sans-serif;
+
+@import "reset";
+@import "docs";
+
+// Styling for the top of page controls.
+.controls {
+    font-family: $font-sans;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    background: $c-bg;
+    color: $c-text;
+    h1 {
+        box-sizing: border-box;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        width: 100%;
+        background: darken($c-bg, 5%);
+    }
+    &.open {
+        h1 {
+            &:after {
+                content: "▾";
+            }
+        }
+    }
+    &.closed {
+        gap: 0;
+        h1 {
+            font-size: 0.7rem;
+            &:after {
+                content: "▴";
+            }
+        }
+        .group, .help {
+            height: 0;
+            display: none;
+        }
+    }
+    .help {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        font-size: 0.7rem;
+    }
+    .group {
+        padding: 0.5rem 1rem;
+        &.open {
+            .group-title {
+                &:after {
+                    content: "▾";
+                }
+            }
+        }
+        &.closed {
+            gap: 0;
+            .group-title {
+                &:after {
+                    content: "▴";
+                }
+            }
+            .inputs {
+                height: 0;
+                display: none;
+            }
+        }
+        gap: 0.5em;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        .group-title {
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+    }
+    .inputs {
+        gap: 0.5em;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+    .field {
+        font-size: 0.9rem;
+        display: flex;
+        gap: 0.5em;
+        label {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+    }
+    #card_html {
+        font-family: monospace;
+    }
+}
+
+// The main card container
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10mm;
+    justify-content: center;
+}
+
+// The cards - sets up the basic sizing with bleed
+.card {
+    height: var(--card-full-height);
+    // We don't really want anything outside the card area displaying
+    overflow: hidden;
+    padding: var(--card-bleed);
+    width: var(--card-full-width);
+    .print-area {
+        height: var(--card-height);
+        width: var(--card-width);
+    }
+}
+
+// Printing settings
+@media only print {
+
+    // custom page size, with auto-centering margins
+    @page custom {
+        size: var(--page-width) var(--page-height);
+        margin: var(--page-margin-y) var(--page-margin-x);
+        overflow: hidden;
+    }
+
+    // default page sizes
+    @page a5 {
+        size: a5 portrait;
+    }
+
+    @page a4 {
+        size: a4 portrait;
+    }
+
+    @page a3 {
+        size: a3 portrait;
+    }
+
+    @page a2 {
+        size: a2 portrait;
+    }
+
+    @page a1 {
+        size: a1 portrait;
+    }
+    @page a0 {
+        size: a0 portrait;
+    }
+
+    // The individual page setting has some special
+    // settings to make sure it prints one card per page exactly
+    @page individual {
+        size: calc(var(--card-full-width) - 0.07mm) var(--card-full-height);
+        margin: 0;
+        overflow: hidden;
+    }
+
+    // Don't want a gap between the cards when printing
+    #cards {
+        gap: 0;
+    }
+    // We definitely don't want cards breaking across pages
+    .card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    // Stuff that shouldn't print (basically everything except the cards)
+    .noprint, .no-print {
+        display: none !important;
+    }
+    // Uses print driver page settings, so nothing needed here
+    .print-auto {
+    }
+    // custom page
+    .print-custom {
+        page: custom;
+    }
+    // default pages
+    .print-a5 {
+        page: a4;
+    }
+    .print-a4 {
+        page: a4;
+    }
+    .print-a3 {
+        page: a3;
+    }
+    .print-a2 {
+        page: a2;
+    }
+    .print-a1 {
+        page: a1;
+    }
+    .print-a0 {
+        page: a0;
+    }
+    // The individual page setting has some special
+    // settings to make sure it prints one card per page exactly
+    .print-individual {
+        page: individual;
+        .card {
+            outline: 0;
+            border: none;
+            page-break-after: always;
+            overflow: hidden;
+        }
+    }
+}
