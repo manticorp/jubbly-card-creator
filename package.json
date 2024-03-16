@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --config webpack.config.js --watch",
     "dev": "webpack --config webpack.config.js",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "serve": "npx http-server -o"
   },
   "keywords": [
     "board game",

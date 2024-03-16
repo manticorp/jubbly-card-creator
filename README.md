@@ -38,28 +38,29 @@ If you're using this for printing, Chrome is **strongly** preferred, as it seems
 
 1. Clone this repository
 2. Open a terminal and run ```npm install```
-3. Create a ```card.html``` file in the root folder (you can copy card-example.html, or look at one of the examples from the examples folder)
+3. The install script will create ```card.html```, ```sass/card.scss``` and run ```webpack``` for you.
 
 ## Running
 
 ### npx http-server
 
 1. run ```npm watch```
-2. run ```npx http-server```
+2. run ```npm run serve```
 3. navigate to [http://127.0.0.1:8081/](http://127.0.0.1:8081/) (by default)
 
 ### Server
 
-1. run ```npm watch```
+1. run ```npm run watch```
 2. navigate to repo bas directory in your browser
 
 ### Serverless
 
-1. run ```npm watch```
+1. run ```npm run watch```
 2. open ```index.html``` in your text editor and manually replace the section ```<!-- the contents here are replaced with card.html -->``` with the contents of card.html
-3. open ```index.html``` in browser - everything else should work as normal
 
 In each case, you should see the settings pop up.
+
+![Main App](docs/im/main-app.png)
 
 ## Impetus
 
