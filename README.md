@@ -82,13 +82,21 @@ Adobe InDesign is *very* capable software, and even includes data merging capabi
 
 Ditto for needing to bold certain words in text, or conditionally display elements.
 
-#### ❌ Card Creatr Studio
+#### ❌ [Card Creatr Studio](https://cardcreatr.sffc.xyz/)
 
-Brilliant software, but the inability to import and export CSVs is a showstopper.
+Brilliant software, but the inability to import and export CSVs is a showstopper. It also uses it's own language.
 
 #### ❌ SVG files as templates
 
 Using SVG would be a great choice, however, until *anything* supports SVG2.0 it's not an option, especially for lack of CMYK support and text wrapping (textArea).
+
+#### ❌ [nanDECK](https://www.nandeck.com/)
+
+Uses it's own proprietary language, even if it is based on HTML.
+
+#### ❌ [Dextrous](https://www.dextrous.com.au/)
+
+Great GUI based creator in the browser, but lacks advanced features like scripting.
 
 ## Technology
 
