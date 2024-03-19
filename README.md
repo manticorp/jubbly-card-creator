@@ -1,4 +1,8 @@
-# HTML + CSS Card Creator
+# Jubbly
+
+HTML + CSS Card Creator
+
+![Jubbly logo](docs/im/icon_and_logotype-320.png)
 
 Easily create data driven playing cards in browser, for digital or print use.
 
