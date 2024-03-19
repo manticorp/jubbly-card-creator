@@ -36,6 +36,9 @@ $font-sans: 'Helvetica', 'Segoe-Ui', 'Roboto', sans-serif;
 
 // Styling for the top of page controls.
 .controls {
+    .logo {
+        height: 45px;
+    }
     font-family: $font-sans;
     width: 100%;
     display: flex;
@@ -70,6 +73,9 @@ $font-sans: 'Helvetica', 'Segoe-Ui', 'Roboto', sans-serif;
         .group, .help {
             height: 0;
             display: none;
+        }
+        .logo {
+            height: 22px;
         }
     }
     .help {
