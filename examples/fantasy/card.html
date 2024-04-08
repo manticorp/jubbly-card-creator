@@ -1,0 +1,15 @@
+<div class="card example-fantasy" :class="[`type-${card.type}`]" :id="`card-${card.id}-${card._index}`" :key="`card-${card.id}-${card._index}`">
+    <div class="print-area">
+        <span class="cost" x-text="card.cost"></span>
+        <h1 x-html="card.name"></h1>
+        <img class="main-image" :src="card.image">
+        <div class="description" x-html="markdownParse(card.description)"></div>
+        <div class="stats">
+            <template  x-if="card.stat_atk ?? null"><div class="stat attack">Attack: <span x-text="card.stat_atk"></span></div></template>
+            <template  x-if="card.stat_healing ?? null"><div class="stat healing">Healing: <span x-text="card.stat_healing"></span></div></template>
+        </div>
+        <div class="footer">
+            &copy; 2024 yourcompany.biz
+        </div>
+    </div>
+</div>

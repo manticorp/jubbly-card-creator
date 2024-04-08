@@ -1,0 +1,24 @@
+<div class="card example-classic" :class="[card.suit]">
+    <div class="print-area">
+        <div class="value corner upper left" x-text="card.display">
+        </div>
+        <div class="symbol corner upper right" x-text="card.symbol">
+        </div>
+        <div class="center-symbols" :class="['symbols-'+card.value]">
+            <template x-if="card.value <= 10">
+                <template x-for="1 in parseInt(card.value)">
+                    <div class="symbol center" x-text="card.symbol">
+                    </div>
+                </template>
+            </template>
+            <template x-if="card.value > 10">
+                <div class="value center" x-text="card.display">
+                </div>
+            </template>
+        </div>
+        <div class="symbol corner lower left" x-text="card.symbol">
+        </div>
+        <div class="value corner lower right" x-text="card.display">
+        </div>
+    </div>
+</div>

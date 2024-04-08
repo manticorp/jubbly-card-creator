@@ -1,0 +1,16 @@
+<div class="card example-modern">
+    <div class="print-area">
+        <div class="qa">
+            <div class="question" x-text="card.question"></div>
+            <div class="answers">
+                <template x-for="answer in shuffle([card.correct_answer,card.incorrect_answer_1, card.incorrect_answer_2])">
+                    <div class="answer" :class="{'correct': answer == card.correct_answer}" x-text="answer"></div>
+                </template>
+            </div>
+        </div>
+        <img class="logo" src="examples/modern/logo.png">
+        <div class="footer">
+            <span x-text="card.id"></span> &bullet; &copy; 2024 QuizCompany
+        </div>
+    </div>
+</div>

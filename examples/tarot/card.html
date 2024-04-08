@@ -1,0 +1,10 @@
+<div class="card example-tarot">
+    <div class="print-area">
+        <img class="artwork" :src="`examples/tarot/im/${card.id}.jpg`">
+    </div>
+    <div class="color-overlay" x-show="card.color" :style="`background: ${card.color}`"></div>
+    <div class="overlay">
+        <div class="name" x-text="card.name"></div>
+        <div class="number" x-text="card.number"></div>
+    </div>
+</div>
