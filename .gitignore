@@ -1,6 +1,7 @@
-./card.html
+/card.html
 sass/card.scss
-README.html
+/README.html
+/projects/*
 
 # Logs
 logs

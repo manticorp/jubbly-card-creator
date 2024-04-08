@@ -53,6 +53,15 @@
             // tarot: only tarot size (70 x 120mm)
             example: null, // 'modern', 'tarot', 'fantasy' or 'classic'
 
+            // Here you can have project directory, containing:
+            // card.html
+            // cards.csv
+            // optional card.js (for including JS)
+            // optional card.css (for including css)
+            //
+            // This will overwrite 'file' and 'template' options below.
+            project: null,
+
             // If you are able to run a local webserver, then put the relative filename
             // to the csv file here
             file: null,
@@ -69,6 +78,9 @@
             // Change this function to pre-process any of the card data.
             processCard: (card, row_index, card_index, subcard_index) => {
                 // you can process the card data any way you like.
+                if (typeof processCard === 'function') {
+                    processCard(card, row_index, card_index, subcard_index);
+                }
                 return card;
             },
 
@@ -150,10 +162,27 @@
             cards: $persist([])
         }"
         x-init="
+        let folder = example ?? project ?? null;
+        let type = 'example';
         if (example) {
-            // Load the example variables, if we have one
-            file     = `examples/${example}/cards.csv`;
-            template = `examples/${example}/card.html`;
+            type = 'example';
+        } else if (project) {
+            type = 'project';
+        }
+        if (folder) {
+            file     = `${type}s/${folder}/cards.csv`;
+            template = `${type}s/${folder}/card.html`;
+            let js   = `${type}s/${folder}/card.js`
+            let css  = `${type}s/${folder}/card.css`
+            let sc = document.createElement('script');
+            sc.src = js;
+            sc.type = 'text/javascript';
+            sc.onload = () => refreshAll();
+            document.querySelector('head').appendChild(sc);
+            let lnk  = document.createElement('link');
+            lnk.href = css;
+            lnk.rel  = 'stylesheet';
+            document.querySelector('head').appendChild(lnk);
         }
         // We can only load external files via http unfortunately due to CORS policy
         if (location.href.startsWith('http')) {
