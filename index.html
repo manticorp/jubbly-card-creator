@@ -5,8 +5,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Card Creator</title>
-        <link rel="stylesheet" href="dist/css/app.css">
-        <link rel="stylesheet" href="dist/css/card.css">
         <meta name="description" content="">
 
         <meta property="og:title" content="">
@@ -23,7 +21,7 @@
 
         <script src="vendor/alpine.persist.3.13.7.min.js" defer></script>
         <script src="vendor/alpine.3.13.7.min.js" defer></script>
-        <script src="dist/js/app.js"></script>
+        <script src="js/app.js"></script>
 
         <script>
         </script>
@@ -110,6 +108,8 @@
                 this.refreshTemplate();
                 // load the file if present
                 this.refreshFile();
+                // refresh CSS
+                this.refreshCss();
             },
             refreshTemplate: function() {
                 if (this.template && location.href.startsWith('http')) {
@@ -157,6 +157,13 @@
                     document.querySelector('#cards').innerHTML = `<template x-for='card in filteredCards'>${this.card_html}</template>`;
                 }
             },
+            refreshCss: function() {
+                document.querySelectorAll(`link[rel='stylesheet']`).forEach(el => {
+                    let u = new URL(el.href);
+                    u.searchParams.set('t', new Date()/1);
+                    el.href=`${u}`;
+                });
+            },
             card_preset: null,
             page_preset: null,
             cards: $persist([])
@@ -172,17 +179,6 @@
         if (folder) {
             file     = `${type}s/${folder}/cards.csv`;
             template = `${type}s/${folder}/card.html`;
-            let js   = `${type}s/${folder}/card.js`
-            let css  = `${type}s/${folder}/card.css`
-            let sc = document.createElement('script');
-            sc.src = js;
-            sc.type = 'text/javascript';
-            sc.onload = () => refreshAll();
-            document.querySelector('head').appendChild(sc);
-            let lnk  = document.createElement('link');
-            lnk.href = css;
-            lnk.rel  = 'stylesheet';
-            document.querySelector('head').appendChild(lnk);
         }
         // We can only load external files via http unfortunately due to CORS policy
         if (location.href.startsWith('http')) {
@@ -345,7 +341,7 @@
                 </div>
             </nav>
             <main>
-                <div id="cards">
+                <div id="cards" :class="[`project-${project}`, `example-${example}`]">
                     <template x-for="card in filteredCards">
                         <!-- the contents here are replaced with card.html -->
                         <!-- If you are running serverless, replace the entire contents of this template with your card html -->

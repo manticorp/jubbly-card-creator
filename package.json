@@ -9,6 +9,7 @@
     "postinstall": "node ./bin/fcp.js sass/card-example.scss sass/card.scss --no-overwrite && node ./bin/fcp.js card-example.html card.html --no-overwrite && webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --config webpack.config.js --watch",
+    "jubbly": "webpack serve --config webpack.config.js",
     "dev": "webpack --config webpack.config.js",
     "build": "webpack --config webpack.config.js",
     "serve": "npx http-server -o"
@@ -34,7 +35,8 @@
     "sass-loader": "^14.1.1",
     "style-loader": "^3.3.4",
     "webpack": "^5.90.3",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
     "markdown-it": "^14.0.0"

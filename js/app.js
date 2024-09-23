@@ -3,6 +3,15 @@ import '/sass/card.scss';
 import markdownit from 'markdown-it';
 import "./helpers";
 
+function requireAll(r) { r.keys().forEach(r); }
+
+requireAll(require.context('./../examples', true, /\.js$/));
+requireAll(require.context('./../examples', true, /\.css$/));
+requireAll(require.context('./../examples', true, /\.scss$/));
+requireAll(require.context('./../projects', true, /\.js$/));
+requireAll(require.context('./../projects', true, /\.css$/));
+requireAll(require.context('./../projects', true, /\.scss$/));
+
 window.parseCsv = (str) => {
   const arr = [];
   let quote = false;

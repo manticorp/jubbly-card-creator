@@ -48,14 +48,13 @@ If you're using this for printing, Chrome is **strongly** preferred, as it seems
 
 ### npx http-server
 
-1. run ```npm watch```
-2. run ```npm run serve```
-3. navigate to [http://127.0.0.1:8081/](http://127.0.0.1:8081/) (by default)
+1. run ```npm run jubbly```
+2. Browser should automatically open, or navigate to [http://127.0.0.1:8081/](http://127.0.0.1:8081/) (by default)
 
 ### Server
 
 1. run ```npm run watch```
-2. navigate to repo bas directory in your browser
+2. navigate to repo base directory in your browser
 
 ### Serverless
 
