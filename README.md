@@ -46,22 +46,8 @@ If you're using this for printing, Chrome is **strongly** preferred, as it seems
 
 ## Running
 
-### npx http-server
-
 1. run ```npm run jubbly```
 2. Browser should automatically open, or navigate to [http://127.0.0.1:8081/](http://127.0.0.1:8081/) (by default)
-
-### Server
-
-1. run ```npm run watch```
-2. navigate to repo base directory in your browser
-
-### Serverless
-
-1. run ```npm run watch```
-2. open ```index.html``` in your text editor and manually replace the section ```<!-- the contents here are replaced with card.html -->``` with the contents of card.html
-
-In each case, you should see the settings pop up.
 
 ![Main App](docs/im/main-app.png)
 
