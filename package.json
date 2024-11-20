@@ -6,7 +6,7 @@
     "fcp": "bin/fcp.js"
   },
   "scripts": {
-    "postinstall": "mkdir projects && node ./bin/fcp.js sass/card-example.scss sass/card.scss --no-overwrite && node ./bin/fcp.js card-example.html card.html --no-overwrite && webpack --config webpack.config.js",
+    "postinstall": "npx st-mkdir projects && node ./bin/fcp.js sass/card-example.scss sass/card.scss --no-overwrite && node ./bin/fcp.js card-example.html card.html --no-overwrite && webpack --config webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --config webpack.config.js --watch",
     "jubbly": "webpack serve --config webpack.config.js",
@@ -39,6 +39,7 @@
     "webpack-dev-server": "^5.1.0"
   },
   "dependencies": {
-    "markdown-it": "^14.0.0"
+    "markdown-it": "^14.0.0",
+    "st-mkdir": "^1.0.0-beta.1"
   }
 }
